@@ -1,0 +1,579 @@
+# Base config for the synthetic experiments
+base_dir_synthetic : &bds ../experiments_results/synthetic
+base_dir_real : &bdr ../experiments_results/real
+base_dir_multilabel : &bdm ../experiments_results/multiclass
+obd_dir : &data '../data/open_bandit_dataset'
+runs : &nruns 100
+runs_bdm : &nruns_bdm 50
+base_synthetic_config : &base_s { 
+    x_dim : 2,
+    x_num : 1000,
+    c_num : 10,
+    a_num : 10, 
+    c_exp : 10,
+    cluster_rad : 1,
+    n_samples : 50_000,
+    runs : *nruns,
+    emp_c_num : 100,
+    e_len : 1_000_000,
+    b_len : 1_000_000,
+    beta : -1,
+    random_state : 43,
+    sigma : .2,
+    alpha_bayes : 20,
+    beta_bayes : 20
+}
+
+base_synthetic_challenging : &base_chall { 
+    x_dim : 2,
+    x_num : 1000,
+    c_num : 10,
+    a_num : 10, 
+    c_exp : 10,
+    cluster_rad : 1,
+    n_samples : 10_000,
+    runs : *nruns,
+    emp_c_num : 30,
+    e_len : 1_000_000,
+    b_len : 1_000_000,
+    beta : -1,
+    random_state : 43,
+    sigma : .2,
+    alpha_bayes : 20,
+    beta_bayes : 20
+}
+
+base_synthetic_config : &base_def { 
+    x_dim : 2,
+    x_num : 1000,
+    c_num : 10,
+    a_num : 200, 
+    c_exp : 10,
+    cluster_rad : 1,
+    n_samples : 50_000,
+    runs : *nruns,
+    emp_c_num : 10,
+    e_len : 1_000_000,
+    b_len : 1_000_000,
+    beta : -1,
+    random_state : 43,
+    sigma : .2,
+    alpha_bayes : 20,
+    beta_bayes : 20
+}
+
+# Base config for the real experiments
+base_real_config_4 : &base_r_4 {
+    runs : *nruns,
+    emp_c_num : 4,
+    sample_size : 50_000,
+    n_actions : 240,
+    alpha_bayes : 20,
+    ope_path : *data,
+    clustering_method : 'kmeans'
+}
+
+base_real_config_8 : &base_r_8 {
+    runs : *nruns,
+    emp_c_num : 8,
+    sample_size : 100_000,
+    n_actions : 240,
+    alpha_bayes : 20,
+    ope_path : *data,
+    clustering_method : 'kmeans'
+}
+
+base_real_config_40 : &base_r_40 {
+    runs : *nruns,
+    emp_c_num : 40,
+    sample_size : 500_000,
+    n_actions : 240,
+    alpha_bayes : 20,
+    ope_path : *data,
+    clustering_method : 'kmeans'
+}
+
+base_real_config_alpha_10 : &base_r_a_10 {
+    runs : *nruns,
+    emp_c_num : 8,
+    sample_size : 50_000,
+    n_actions : 240,
+    alpha_bayes : 10,
+    ope_path : *data,
+    clustering_method : 'kmeans'
+}
+
+base_real_config_alpha_100 : &base_r_a_100 {
+    runs : *nruns,
+    emp_c_num : 8,
+    sample_size : 500_000,
+    n_actions : 240,
+    alpha_bayes : 100,
+    ope_path : *data,
+    clustering_method : 'kmeans'
+}
+
+
+
+# Experiment configurations
+synthetic: {
+  clusters : {
+        params : {emp_c_num : [1, 5, 10, 15, 20, 30, 50, 100, 150, 250, 350, 550, 750, 1000]},
+        baseline : False,
+        name : emp_c_num,
+        base_config : *base_s,
+        estimators :  ['DM', 'IPS', 'DR', 'CHIPS_bayes', 'CHIPS_mean', 'MR', "SNDR", "DRoS", "SNIPS"],
+        base_dir : *bds,
+        logx : True, 
+        logy : True
+    },
+    
+  actions : {
+        params : {a_num : [10, 20, 30, 40, 50, 100, 125, 150, 175, 200, 300, 400, 500]},
+        baseline : True,
+        name : n_actions,
+        base_config : *base_s,
+        estimators :  ['DM', 'IPS', 'DR', 'CHIPS_bayes', 'CHIPS_mean', 'MR', "SNDR", "DRoS", "SNIPS"],
+        base_dir : *bds,
+        logx : True, 
+        logy : True
+      },
+
+    rad : {
+        params : {'cluster_rad' : [
+                      1.0,
+                      2.357142857142857,
+                      3.7142857142857144,
+                      5.071428571428571,
+                      6.428571428571429,
+                      7.7857142857142865,
+                      9.142857142857142,
+                      10.5,
+                      11.857142857142858,
+                      13.214285714285715,
+                      14.571428571428573,
+                      15.928571428571429,
+                      17.285714285714285,
+                      18.642857142857142,
+                      20.0
+                    ]
+                  },
+        baseline : False,
+        name : rad,
+        base_config : *base_chall,
+        estimators :  ['DM', 'IPS', 'DR', 'CHIPS_bayes', 'MR', "SNDR", "DRoS", "SNIPS"],
+        base_dir : *bds,
+        logx : False,
+        logy : True
+    },
+
+    beta : {
+        params : {beta : [-1.0,
+                            -0.8571428571428572,
+                            -0.7142857142857143,
+                            -0.5714285714285714,
+                            -0.4285714285714286,
+                            -0.2857142857142858,
+                            -0.1428571428571429,
+                            0.0,
+                            0.1428571428571428,
+                            0.2857142857142856,
+                            0.4285714285714284,
+                            0.5714285714285714,
+                            0.7142857142857142,
+                            0.857142857142857,
+                            1.0]
+                  },
+        baseline : False,
+        name : beta,
+        base_config : *base_chall,
+        estimators :  ['DM', 'IPS', 'DR', 'CHIPS_bayes', 'CHIPS_mean', 'MR', "SNDR", "DRoS", "SNIPS"],
+        base_dir : *bds,
+        logx : False,
+        logy : True
+    },
+
+    samples : {
+          params : {n_samples : [1000, 5000, 10_000, 20_000, 30_000, 50_000, 70_000, 100_000, 150_000]},
+          baseline : True,
+          name : n_samples,
+          base_config : *base_s,
+          estimators :  ['DM', 'IPS', 'DR', 'CHIPS_bayes', 'CHIPS_mean', 'MR', "SNDR", "DRoS", "SNIPS"],
+          base_dir : *bds,
+          logx : False,
+          logy : True
+    },
+
+
+    clusters_actions : {
+      params : {
+        'emp_c_num' : [1, 5, 10, 15, 20, 50, 100, 150, 250, 350, 550, 750, 1000], 
+        'a_num':[10, 50, 100, 150, 200, 350, 550]
+      },
+      ref : a_num,
+      baseline : True,
+      name : n_clusters_n_actions,
+      base_config : *base_s,
+      estimators :  ['IPS','CHIPS_bayes'],
+      base_dir : *bds,
+      logx : True, 
+      logy : True
+    },
+
+    samples_alpha : {
+      params : {
+        'alpha_bayes':[3,4,5,10,15,20,25,30,35,40,45,50,75,100],
+        'n_samples' : [1000, 5000, 10_000, 20_000, 30_000, 50_000, 70_000, 100_000, 150_000, 200_000], 
+      },
+      ref : n_samples,
+      baseline : True,
+      name : n_samples_alpha_bayes,
+      base_config : *base_s,
+      estimators :  ['IPS','CHIPS_bayes'],
+      base_dir : *bds,
+      logx : True, 
+      logy : True
+    },
+    
+    clusters_samples : {
+      params : {
+        'emp_c_num' : [1, 5, 10, 15, 20, 50, 100, 150, 250, 350], 
+        'n_samples': [1000, 5000, 10_000, 20_000, 30_000, 50_000, 70_000, 100_000, 150_000]
+      },
+      ref : n_samples,
+      baseline : True,
+      name : n_clusters_n_samples,
+      base_config : *base_s,
+      estimators :  ['IPS','CHIPS_bayes'],
+      base_dir : *bds,
+      logx : True, 
+      logy : True
+    },
+    
+
+    sigma : {
+        params : {sigma : [0.0,
+                            0.07142857142857142,
+                            0.14285714285714285,
+                            0.21428571428571427,
+                            0.2857142857142857,
+                            0.3571428571428571,
+                            0.42857142857142855,
+                            0.5,
+                            0.5714285714285714,
+                            0.6428571428571428,
+                            0.7142857142857142,
+                            0.7857142857142857,
+                            0.8571428571428571,
+                            0.9285714285714285,
+                            1.0]
+                  },
+        baseline : False,
+        name : sigma,
+        base_config : *base_chall,
+        estimators :  ['DM', 'IPS', 'DR', 'CHIPS_bayes', 'MR', "SNDR", "DRoS", "SNIPS"],
+        base_dir : *bds,
+        logx : False,
+        logy : True
+    },
+
+    alpha : {
+        params : {alpha_bayes : [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]},
+        baseline : True,
+        name : alpha_bayes,
+        base_config : *base_s,
+        estimators :  ['DM', 'IPS', 'DR', 'CHIPS_bayes', 'MR', "SNDR", "DRoS", "SNIPS"],
+        base_dir : *bds,
+        logx : False,
+        logy : True
+    },
+
+
+  clustering_method_rad : {
+      params : {
+        'clustering_method' : [
+                              'kmeans', 
+                              'mean_shift', 
+                              'spectral_clustering', 
+                              'agglomerative_clustering', 
+                              'dbscan',
+                              'optics',
+                              'birch',
+                              'bayes_gmm',
+                              'affinity_propagation',
+                              'gmm',
+                              ], 
+        'cluster_rad':[
+                      1.0,
+                      2.357142857142857,
+                      3.7142857142857144,
+                      5.071428571428571,
+                      6.428571428571429,
+                      7.7857142857142865,
+                      9.142857142857142,
+                      10.5,
+                      11.857142857142858,
+                      13.214285714285715,
+                      14.571428571428573,
+                      15.928571428571429,
+                      17.285714285714285,
+                      18.642857142857142,
+                      20.0
+                    ]
+      },
+      ref : cluster_rad,
+      baseline : True,
+      name : clustering_method_rad,
+      base_config : *base_s,
+      estimators :  ['IPS','CHIPS_bayes'],
+      base_dir : *bds,
+      logx : False, 
+      logy : True
+    },
+
+    beta_alpha : {
+      params : {
+        alpha_bayes : [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100], 
+        beta : [-1.0,
+                            -0.8571428571428572,
+                            -0.7142857142857143,
+                            -0.5714285714285714,
+                            -0.4285714285714286,
+                            -0.2857142857142858,
+                            -0.1428571428571429,
+                            0.0,
+                            0.1428571428571428,
+                            0.2857142857142856,
+                            0.4285714285714284,
+                            0.5714285714285714,
+                            0.7142857142857142,
+                            0.857142857142857,
+                            1.0]
+      },
+      ref : beta,
+      baseline : False,
+      name : beta_alpha,
+      base_config : *base_chall,
+      estimators :  ['IPS','CHIPS_bayes'],
+      base_dir : *bds,
+      logx : False, 
+      logy : True
+    },
+
+    def_actions : {
+        params : {def_actions : [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70]},
+        baseline : False,
+        name : def_actions,
+        base_config : *base_def,
+        estimators :  ['DM', 'IPS', 'DR', 'CHIPS_bayes', 'MR', "SNDR", "DRoS", "SNIPS"],
+        base_dir : *bds,
+        logx : False,
+        logy : True
+    },
+
+}
+
+real : {
+  real_4 :  {
+          name : c_num_4,
+          params : {emp_c_num : [4]},
+          baseline : False,
+          base_config : *base_r_4,
+          estimators :  [],
+          plot : {},
+          base_dir : *bdr
+    },
+  
+  real_8 :  {
+          name : c_num_8,
+          params : {emp_c_num : [8]},
+          baseline : False,
+          base_config : *base_r_8,
+          estimators :  [],
+          plot : {},
+          base_dir : *bdr
+    },
+
+  real_40 :  {
+          name : c_num_40,
+          params : {emp_c_num : [40]},
+          baseline : False,
+          base_config : *base_r_40,
+          estimators :  [],
+          plot : {},
+          base_dir : *bdr
+    },
+
+  
+
+  real_multi :  {
+          name : c_num_multi,
+          params : {'emp_c_num' : [1,2,4,8,16,32,64]},
+          baseline : False,
+          base_config : *base_r_8,
+          estimators :  ['CHIPS_bayes',  'IPS'],
+          plot : {},
+          base_dir : *bdr
+    },
+
+  real_a_10 :  {
+          name : alpha_10,
+          params : {'alpha_bayes' : [10]},
+          baseline : False,
+          base_config : *base_r_a_10,
+          estimators :  ['CHIPS_bayes',  'IPS'],
+          plot : {},
+          base_dir : *bdr
+    },
+
+  real_a_100 :  {
+          name : alpha_100,
+          params : {'alpha_bayes' : [100]},
+          baseline : False,
+          base_config : *base_r_a_100,
+          estimators :  ['CHIPS_bayes',  'IPS'],
+          plot : {},
+          base_dir : *bdr
+    },
+
+  real_alpha :  {
+          name : alpha,
+          params : {'alpha_bayes' : [1, 5, 10, 20, 30, 50, 100]},
+          baseline : False,
+          base_config : *base_r_8,
+          estimators :  ['CHIPS_bayes',  'IPS'],
+          plot : {},
+          base_dir : *bdr
+    },
+  
+  real_non_parametric :  {
+          name : non_parametric,
+          params : {clustering_method:['optics']},
+          baseline : False,
+          base_config : *base_r_8,
+          estimators :  [],
+          plot : {},
+          base_dir : *bdr
+    },
+}
+
+multilabel : {
+  digits : {
+    name : digits,
+    params : {alpha_bayes : [5]},
+    baseline : True,
+    base_config : {
+      alpha_b: 0.,
+      alpha_e: 0.2,
+      runs: *nruns_bdm ,
+      eval_size: 1000,
+      source: digits,
+      emp_c_num: 100,
+    },
+    base_dir : *bdm
+  },
+
+  letter : {
+    name : letter,
+    params : {alpha_bayes : [4.5]},
+    baseline : True,
+    base_config : {
+      alpha_b: 0.,
+      alpha_e: 0.2,
+      runs: *nruns_bdm ,
+      eval_size: 1000,
+      source: openml,
+      id: 6,
+      emp_c_num: 50,
+    },
+    base_dir : *bdm
+  },
+
+  optdigits: {
+    name : optdigits,
+    params : {alpha_bayes : [5]},
+    baseline : True,
+    base_config : {
+      alpha_b: 0.,
+      alpha_e: 0.2,
+      runs: *nruns_bdm ,
+      eval_size: 1000,
+      source: openml,
+      id: 28,
+      emp_c_num: 100,
+    },
+    base_dir : *bdm
+  },
+
+  pendigits: {
+    name : pendigits,
+    params : {alpha_bayes : [4.5]},
+    baseline : True,
+    base_config : {
+      alpha_b: 0.,
+      alpha_e: 0.2,
+      runs: *nruns_bdm ,
+      eval_size: 1000,
+      source: openml,
+      id: 32,
+      emp_c_num: 100,
+    },
+    base_dir : *bdm
+  },
+
+  satimage: {
+    name : satimage,
+    params : {alpha_bayes : [5]},
+    baseline : True,
+    base_config : {
+      alpha_b: 0.,
+      alpha_e: 0.2,
+      runs: *nruns_bdm ,
+      eval_size: 1000,
+      source: openml,
+      id: 32,
+      emp_c_num: 100,
+    },
+    base_dir : *bdm
+  },
+
+  mnist: {
+    name : mnist,
+    params : {alpha_bayes : [4]},
+    baseline : True,
+    base_config : {
+      alpha_b: 0.,
+      alpha_e: 0.2,
+      runs: *nruns_bdm ,
+      eval_size: 1000,
+      source: openml,
+      id: 554,
+      emp_c_num: 100,
+    },
+    base_dir : *bdm
+  },
+
+  cifar100: {
+    name : cifar100,
+    params : {alpha_bayes : [1.5]},
+    baseline : True,
+    base_config : {
+      alpha_b: 0.,
+      alpha_e: 0.2,
+      runs: *nruns_bdm ,
+      eval_size: 1000,
+      source: openml,
+      id: 41983,
+      emp_c_num: 20,
+    },
+    base_dir : *bdm
+  },
+
+
+
+
+}
+
+
+
+

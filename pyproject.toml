@@ -1,0 +1,58 @@
+[tool.black]
+line-length = 100
+
+[tool.isort]
+known_first_party = ["chips"]
+
+# required for compatibility with black:
+profile = "black"
+
+# To maintain consistency with other settings
+line_length = 100
+
+[tool.mypy]
+# See https://mypy.readthedocs.io/en/latest/config_file.html for more mypy options.
+
+# Enables the type-checker on the interior of functions without type annotations.
+check_untyped_defs = true
+
+# Displaying specific error codes makes it easier to silence specific errors
+# See also https://mypy.readthedocs.io/en/latest/error_codes.html
+show_error_codes = true
+
+# Show source code snippets and location markers in error messages
+pretty = true
+
+# Suppresses errors about packages which do not implement type-hint sharing.
+# See also https://mypy.readthedocs.io/en/latest/running_mypy.html#missing-imports.
+ignore_missing_imports = true
+
+[tool.poetry]
+name = "chips"
+version = "1.0.0"
+description = "Package containing the code and associated experiments to the CHIPS estimator."
+authors = ["Daniel Guzman Olivares <daniel.guzmanolivares@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.10"
+tqdm = "^4.65.0"
+
+[tool.poetry.group.dev.dependencies]
+matplotlib = "3.6.2"
+numpy = "1.22.4"
+pandas = "1.5.2"
+pandas-flavor = "0.3.0"
+pexpect= "4.8.0"
+
+scikit-learn= "1.0.2"
+scipy= "1.7.3"
+seaborn="0.11.2"
+yalm="0.0.2a7"
+obp = "0.5.5"
+pyyaml = "5.4.1"
+ipykernel = "^6.29.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
